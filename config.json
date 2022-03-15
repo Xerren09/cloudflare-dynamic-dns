@@ -1,0 +1,14 @@
+{
+    "ip": "",
+    "checkIntervalMS": 900000,
+    "records": [
+        {
+            "authEmail": "",
+            "authKey": "",
+            "zoneName": "",
+            "zoneIdentifier": "",
+            "recordName": "",
+            "recordIdentifier": ""
+        }
+    ]
+}
