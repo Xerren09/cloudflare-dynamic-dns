@@ -1,5 +1,5 @@
 {
-  "name": "coudflare-dynamic-dns",
+  "name": "cloudflare-dynamic-dns",
   "version": "1.0.0",
   "description": "A small script to automatically update the IP address(es) attached to a cloudflare DNS record(s) ",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Xerren09/coudflare-dynamic-dns.git"
+    "url": "git+https://github.com/Xerren09/cloudflare-dynamic-dns.git"
   },
   "author": "Bars Margetsch",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/Xerren09/coudflare-dynamic-dns/issues"
+    "url": "https://github.com/Xerren09/cloudflare-dynamic-dns/issues"
   },
-  "homepage": "https://github.com/Xerren09/coudflare-dynamic-dns#readme",
+  "homepage": "https://github.com/Xerren09/cloudflare-dynamic-dns#readme",
   "dependencies": {
     "axios": "^0.26.1",
     "fs": "^0.0.1-security"
