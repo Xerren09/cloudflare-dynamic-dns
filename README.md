@@ -1,4 +1,4 @@
-# coudflare-dynamic-dns
+# cloudflare-dynamic-dns
 A small script to automatically update the IP address(es) attached to a CloudFlare DNS record(s).
 
 This was written in somewhat of a hurry to allow a Raspberry PI to host some university projects.
