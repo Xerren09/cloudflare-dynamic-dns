@@ -96,7 +96,7 @@ function updateDNS() {
 			'X-Auth-Email': record.authEmail,
 			'X-Auth-Key': record.authKey
 		}
-		axios.put(cloudflareUpdateDNS_URL, cloudflareUpdate, {headers: cloudflare_headers}).then(res => {
+		axios.patch(cloudflareUpdateDNS_URL, cloudflareUpdate, {headers: cloudflare_headers}).then(res => {
 			//console.log(res);
 		}).catch(error => {
 			log(error, "DNS Record update failed.");
