@@ -7,28 +7,31 @@ const logPath = './logs/log.txt';
 var config = JSON.parse(fs.readFileSync(configPath));
 
 const API_check_server = "https://api.ipify.org/?format=json"; // They are very cool <3
-const cloudflare_getZoneID = (zoneName) => {return `https://api.cloudflare.com/client/v4/zones?name=${zoneName}`}
-const cloudflare_getRecordID = (zoneID, recordName) => {return `https://api.cloudflare.com/client/v4/zones/${zoneID}/dns_records?name=${recordName}`}
-const cloudflare_updateDNSrecord = (zoneID, recordID) => {return `https://api.cloudflare.com/client/v4/zones/${zoneID}/dns_records/${recordID}`}
+const create_cloudflare_getZoneID_URL = (zoneName) => {return `https://api.cloudflare.com/client/v4/zones?name=${zoneName}`}
+const create_cloudflare_getRecordID_URL = (zoneID, recordName) => {return `https://api.cloudflare.com/client/v4/zones/${zoneID}/dns_records?name=${recordName}`}
+const create_cloudflare_updateDNSrecord_URL = (zoneID, recordID) => {return `https://api.cloudflare.com/client/v4/zones/${zoneID}/dns_records/${recordID}`}
 
-const updateCheckInterval = setInterval(checkIP, config.checkIntervalMS);
+var updateCheckInterval = null;
 
 function log (message, description="") {
-	const logline = `${new Date().toUTCString()} - ${description}:\n${message}`;
+	const logline = `${new Date().toUTCString()} - ${description}:\n${message}\n`;
 	fs.appendFileSync(logPath, logline);
 }
 
-function start() {
+async function start() {
 	if (!fs.existsSync(logPath))
 	{
 		fs.writeFileSync(logPath, "");
-		log("Log file created", "Log");
+		log("Log file created", "Initialisation");
 	}
-	(async()=>{
-		// Wait until all the IDs are received.
-		await getIDs();
-		checkIP();
-	})();
+    if (config.checkIntervalMS > 0)
+    {
+        updateCheckInterval = setInterval(checkIP, config.checkIntervalMS);
+        log(`Script started with native interval of ${config.checkIntervalMS}ms`, "Startup");
+    }
+    // Wait until all the IDs are received.
+    await getIDs();
+    checkIP();
 }
 
 function checkIP () {
@@ -37,7 +40,7 @@ function checkIP () {
 		{
 			// IP changed, update DNS records
 			config.ip = res.data.ip;
-			log(config.ip, "IP updated");
+			log(`New IP: ${config.ip}`, "IP updated");
 			updateConfig();
 		}
 	}).catch(error => {
@@ -58,20 +61,20 @@ async function getIDs () {
 				'X-Auth-Key': record.authKey
 			}
 			// Get the request url for the Zone ID
-			const cloudflareZoneID_URL = cloudflare_getZoneID(record.zoneName);
+			const cloudflareZoneID_URL = create_cloudflare_getZoneID_URL(record.zoneName);
 			await axios.get(cloudflareZoneID_URL, {headers: cloudflare_headers}).then(res => {
 				zoneID = res.data.result[0].id;
 				config.records[index].zoneIdentifier = zoneID;
 			}).catch(error => {
-				log(error, "Zone ID request failed.");
+				log(error, "Zone ID request failed");
 			});
 			// Get the request url for the Record ID
-			const cloudflareRecordID_URL = cloudflare_getRecordID(zoneID, record.recordName);
+			const cloudflareRecordID_URL = create_cloudflare_getRecordID_URL(zoneID, record.recordName);
 			await axios.get(cloudflareRecordID_URL, {headers: cloudflare_headers}).then(res => {
 				recordID = res.data.result[0].id;
 				config.records[index].recordIdentifier = recordID;
 			}).catch(error => {
-				log(error, "Record ID request failed.");
+				log(error, "Record ID request failed");
 			});
 		}
 	};
@@ -84,7 +87,7 @@ function updateConfig() {
 
 function updateDNS() {
 	config.records.forEach(record => {
-		const cloudflareUpdateDNS_URL = cloudflare_updateDNSrecord(record.zoneIdentifier, record.recordIdentifier);
+		const cloudflareUpdateDNS_URL = create_cloudflare_updateDNSrecord_URL(record.zoneIdentifier, record.recordIdentifier);
 		const cloudflareUpdate = {
 			id: record.zoneIdentifier,
 			type: "A",
@@ -97,9 +100,9 @@ function updateDNS() {
 			'X-Auth-Key': record.authKey
 		}
 		axios.patch(cloudflareUpdateDNS_URL, cloudflareUpdate, {headers: cloudflare_headers}).then(res => {
-			//console.log(res);
+			log(`DNS Record updated for ${record.recordName}.`, `New IP: ${config.ip}.`);
 		}).catch(error => {
-			log(error, "DNS Record update failed.");
+			log(error, `DNS Record update failed for ${record.recordName}`);
 		});
 	});
 }
