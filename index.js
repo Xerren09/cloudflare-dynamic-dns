@@ -43,6 +43,9 @@ function checkIP () {
 			log(`New IP: ${config.ip}`, "IP updated");
 			updateConfig();
 		}
+		else if (config.logging == 'full') {
+			log('IP not changed');
+		}
 	}).catch(error => {
 		log(error, "IP check failed");
 	})
