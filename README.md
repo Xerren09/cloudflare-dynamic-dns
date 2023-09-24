@@ -11,6 +11,7 @@ The `config.json` file's `records` array can handle individual DNS records in th
 {
     "ip": "",
     "checkIntervalMS": 0,
+    "logging": "",
     "records": [
         {
             "authEmail": "example1@example.com",
@@ -41,6 +42,8 @@ Both `zoneIdentifier` and `recordIdentifier` should be left empty, along with th
 The `checkIntervalMS` property can be used to set how often, in milliseconds, the script should check if the IP address has changed. By default it is set to 0 minutes, which disables this function. This is useful if the script is periodically called from another source (for example from cron).
 
 Once started, this script runs once - or if the `checkIntervalMS` property is set, indefinitely - and logs any issues into `./logs/log.txt`.
+
+For full logging (write to logline everytime a check has been done, regardless if the IP changed), set `logging` to 'full'.
 
 ## IP check
 
