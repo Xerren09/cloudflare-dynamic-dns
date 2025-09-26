@@ -1,13 +1,10 @@
 {
-	"ip": "",
-	"checkIntervalMS": 0,
+	"token": "",
 	"records": [
 		{
-			"authEmail": "",
-			"authKey": "",
 			"zoneName": "",
-			"zoneIdentifier": "",
 			"recordName": "",
+			"zoneIdentifier": "",
 			"recordIdentifier": ""
 		}
 	]
