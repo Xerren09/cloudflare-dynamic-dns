@@ -1,6 +1,6 @@
 {
   "name": "cloudflare-dynamic-dns",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A small NodeJS tool to automatically update the IP address of CloudFlare DNS records.",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,7 @@
     "url": "https://github.com/Xerren09/cloudflare-dynamic-dns/issues"
   },
   "homepage": "https://github.com/Xerren09/cloudflare-dynamic-dns#readme",
-  "dependencies": {
-    "axios": "^1.16.0"
-  },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }
